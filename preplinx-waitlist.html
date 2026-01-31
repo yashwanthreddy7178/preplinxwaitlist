@@ -307,6 +307,18 @@
             animation: fadeInUp 0.4s ease;
         }
 
+        /* Error Message */
+        .error-message {
+            display: none;
+            padding: 16px 24px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            color: #f87171;
+            text-align: center;
+            animation: fadeInUp 0.4s ease;
+        }
+
         /* Section Styles */
         section {
             padding: 100px 0;
@@ -1291,6 +1303,9 @@
                     <div class="success-message" id="successMessage">
                         🎉 You're on the list! We'll email you when your batch opens.
                     </div>
+                    <div class="error-message" id="errorMessage">
+                        Signup failed (often a 404 means the form URL needs updating). Please try again or contact us.
+                    </div>
                 </div>
 
                 <!-- Right Column - Product Mockup -->
@@ -1585,6 +1600,9 @@
             <div class="success-message" id="successMessage2">
                 🎉 You're on the list! We'll email you when your batch opens.
             </div>
+            <div class="error-message" id="errorMessage2">
+                Signup failed (often a 404 means the form URL needs updating). Please try again or contact us.
+            </div>
         </div>
     </section>
 
@@ -1618,66 +1636,81 @@
             observer.observe(el);
         });
 
-        // Form handling with Google Apps Script (using iframe for reliable CORS bypass)
-        function handleFormSubmit(formId, successId) {
+        // Form handling: try fetch first to detect 404; fallback to iframe if CORS blocks
+        function handleFormSubmit(formId, successId, errorId) {
             const form = document.getElementById(formId);
             const success = document.getElementById(successId);
+            const errorEl = document.getElementById(errorId);
 
             if (form) {
-                form.addEventListener('submit', (e) => {
+                form.addEventListener('submit', async (e) => {
                     e.preventDefault();
 
                     const button = form.querySelector('button');
                     const emailInput = form.querySelector('input[name="Email"]');
-                    const email = emailInput.value;
+                    const formNote = form.nextElementSibling;
+                    const email = emailInput.value.trim();
 
-                    // Show loading state
+                    if (success) success.style.display = 'none';
+                    if (errorEl) errorEl.style.display = 'none';
+
+                    const originalText = button.textContent;
                     button.textContent = 'Sending...';
                     button.disabled = true;
 
-                    // Create hidden iframe for form submission
-                    const iframe = document.createElement('iframe');
-                    iframe.name = 'hidden_iframe_' + formId;
-                    iframe.style.display = 'none';
-                    document.body.appendChild(iframe);
-
-                    // Create a temporary form to submit
-                    const tempForm = document.createElement('form');
-                    tempForm.method = 'POST';
-                    tempForm.action = form.action;
-                    tempForm.target = iframe.name;
-
-                    // Add email field
-                    const emailField = document.createElement('input');
-                    emailField.type = 'hidden';
-                    emailField.name = 'Email';
-                    emailField.value = email;
-                    tempForm.appendChild(emailField);
-
-                    document.body.appendChild(tempForm);
-
-                    // Handle iframe load (submission complete)
-                    iframe.onload = function () {
-                        // Show success message
+                    function showSuccess() {
+                        button.textContent = originalText;
+                        button.disabled = false;
                         form.style.display = 'none';
-                        form.nextElementSibling.style.display = 'none';
-                        success.style.display = 'block';
+                        if (formNote) formNote.style.display = 'none';
+                        if (success) success.style.display = 'block';
+                    }
+                    function showError() {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        if (errorEl) errorEl.style.display = 'block';
+                    }
 
-                        // Cleanup
-                        setTimeout(() => {
-                            document.body.removeChild(iframe);
-                            document.body.removeChild(tempForm);
-                        }, 100);
-                    };
-
-                    // Submit the form
-                    tempForm.submit();
+                    try {
+                        const formData = new FormData();
+                        formData.append('Email', email);
+                        const response = await fetch(form.action, { method: 'POST', body: formData });
+                        if (response.ok) {
+                            showSuccess();
+                            return;
+                        }
+                        showError();
+                    } catch (err) {
+                        // CORS may block fetch; fall back to iframe submit (we can't detect 404 then)
+                        const iframe = document.createElement('iframe');
+                        iframe.name = 'hidden_iframe_' + formId;
+                        iframe.style.display = 'none';
+                        document.body.appendChild(iframe);
+                        const tempForm = document.createElement('form');
+                        tempForm.method = 'POST';
+                        tempForm.action = form.action;
+                        tempForm.target = iframe.name;
+                        const emailField = document.createElement('input');
+                        emailField.type = 'hidden';
+                        emailField.name = 'Email';
+                        emailField.value = email;
+                        tempForm.appendChild(emailField);
+                        document.body.appendChild(tempForm);
+                        iframe.onload = function () {
+                            showSuccess();
+                            setTimeout(() => {
+                                if (iframe.parentNode) document.body.removeChild(iframe);
+                                if (tempForm.parentNode) document.body.removeChild(tempForm);
+                            }, 100);
+                        };
+                        tempForm.submit();
+                    }
                 });
             }
         }
 
-        handleFormSubmit('waitlistForm', 'successMessage');
-        handleFormSubmit('waitlistForm2', 'successMessage2');
+        handleFormSubmit('waitlistForm', 'successMessage', 'errorMessage');
+        handleFormSubmit('waitlistForm2', 'successMessage2', 'errorMessage2');
 
         // Note: localStorage is used only to prevent duplicate submissions in the same session
         // The form will always show fresh on page reload
