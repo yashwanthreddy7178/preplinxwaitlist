@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepLinx – Crush Mock Interviews Before They Crush You</title>
+    <meta name="description"
+        content="Practice real-time voice interviews with an AI that pushes you, then tells you what to fix. Join the waitlist for early access.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #f472b6;
+            --accent-secondary: #22d3ee;
+            --bg-dark: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #252542;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --gradient-2: linear-gradient(135deg, #22d3ee 0%, #6366f1 100%);
+            --glow: 0 0 60px rgba(99, 102, 241, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 70% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 30%);
+            animation: gradientMove 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientMove {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(2%, 2%) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1%, 3%) rotate(-1deg);
+            }
+
+            75% {
+                transform: translate(1%, -2%) rotate(0.5deg);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 26, 0.8);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .logo img {
+            height: 100%;
+            width: auto;
+        }
+
+        .nav-cta {
+            padding: 10px 24px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 100px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 0 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Waitlist Form */
+        .waitlist-form {
+            display: flex;
+            gap: 12px;
+            max-width: 480px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .waitlist-form input {
+            flex: 1;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .waitlist-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .waitlist-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .waitlist-form button {
+            padding: 16px 28px;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .waitlist-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .form-note {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .form-note span {
+            color: var(--accent);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            padding: 16px 24px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            color: #4ade80;
+            text-align: center;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Product Showcase Section - Scroll Stack Animation */
+        .product-showcase {
+            position: relative;
+            height: 500vh;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.03) 0%, transparent 50%, rgba(99, 102, 241, 0.03) 100%);
+        }
+
+        .showcase-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 40px 0 20px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, transparent 100%);
+        }
+
+        .product-showcase .section-title {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .gradient-text {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .showcase-stack {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 100px;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .showcase-card {
+            position: absolute;
+            width: 80%;
+            max-width: 900px;
+            aspect-ratio: 2/1;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+            filter: blur(10px);
+            transition: none;
+        }
+
+        .showcase-card.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .showcase-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .showcase-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 60px 24px 24px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, transparent 100%);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .showcase-progress {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .showcase-progress.visible {
+            opacity: 1;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .product-showcase {
+                height: 400vh;
+            }
+
+            .showcase-card {
+                width: 90%;
+            }
+
+            .showcase-label {
+                font-size: 1rem;
+                padding: 40px 16px 16px;
+            }
+
+            .showcase-progress {
+                right: 15px;
+            }
+
+            .progress-dot {
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        /* Pain & Solution Section */
+        .pain-solution {
+            background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.03) 100%);
+        }
+
+        .pain-solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 48px;
+        }
+
+        .pain-column,
+        .solution-column {
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .pain-column {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%);
+        }
+
+        .solution-column {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.02) 100%);
+        }
+
+        .column-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pain-column .column-title {
+            color: #f87171;
+        }
+
+        .solution-column .column-title {
+            color: #4ade80;
+        }
+
+        .column-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .pain-column .column-icon {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .solution-column .column-icon {
+            background: rgba(34, 197, 94, 0.15);
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .pain-column .bullet-list li::before {
+            background: #f87171;
+        }
+
+        .solution-column .bullet-list li::before {
+            background: #4ade80;
+        }
+
+        /* Early Access Section */
+        .early-access {
+            text-align: center;
+        }
+
+        .perks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .perk-card {
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .perk-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: var(--glow);
+        }
+
+        .perk-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .perk-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .perk-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .support-line {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        /* For Students Section */
+        .for-students {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
+        }
+
+        .students-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .students-content p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        .credibility {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .credibility-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* FAQ Section */
+        .faq {
+            text-align: center;
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .faq-item {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            text-align: center;
+            padding: 120px 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.05) 100%);
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .final-cta p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 28px;
+            width: auto;
+            margin: 0 auto 16px;
+        }
+
+        .footer-logo img {
+            height: 100%;
+            width: auto;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .waitlist-form {
+                flex-direction: column;
+            }
+
+            .waitlist-form button {
+                width: 100%;
+            }
+
+            .pain-solution-grid {
+                gap: 24px;
+            }
+
+            .pain-column,
+            .solution-column {
+                padding: 28px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .nav-cta {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Animations on scroll */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Grid Layout */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-left {
+            text-align: left;
+        }
+
+        .hero-left .hero-badge {
+            margin-bottom: 24px;
+        }
+
+        .hero-left .hero-subtitle {
+            margin: 0 0 32px 0;
+            text-align: left;
+        }
+
+        .hero-left .waitlist-form {
+            margin: 0;
+            justify-content: flex-start;
+        }
+
+        .hero-left .form-note {
+            text-align: left;
+        }
+
+        /* Product Mockup */
+        .product-mockup {
+            position: relative;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .mockup-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .mockup-glow-1 {
+            top: -40px;
+            right: -40px;
+            background: rgba(99, 102, 241, 0.4);
+        }
+
+        .mockup-glow-2 {
+            bottom: -40px;
+            left: -40px;
+            background: rgba(168, 85, 247, 0.3);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .mockup-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .mockup-inner {
+            background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%);
+            border-radius: 18px;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .mockup-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mockup-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .mockup-dots span:nth-child(1) {
+            background: #ef4444;
+        }
+
+        .mockup-dots span:nth-child(2) {
+            background: #eab308;
+        }
+
+        .mockup-dots span:nth-child(3) {
+            background: #22c55e;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: #4ade80;
+            font-weight: 500;
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* AI Interviewer Section */
+        .ai-interviewer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 16px;
+        }
+
+        .ai-avatar {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-avatar svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .ai-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(168, 85, 247, 0.2) 100%);
+            z-index: -1;
+            animation: avatarPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes avatarPulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        .ai-info {
+            flex: 1;
+        }
+
+        .ai-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ai-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Sound Waves */
+        .sound-waves {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 24px;
+        }
+
+        .sound-waves span {
+            width: 4px;
+            background: linear-gradient(180deg, #8b5cf6 0%, #a855f7 100%);
+            border-radius: 2px;
+            animation: soundWave 0.8s ease-in-out infinite;
+        }
+
+        .sound-waves span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .sound-waves span:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .sound-waves span:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .sound-waves span:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .sound-waves span:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes soundWave {
+
+            0%,
+            100% {
+                height: 8px;
+            }
+
+            50% {
+                height: 24px;
+            }
+        }
+
+        /* Question Box */
+        .question-box {
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .question-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-light);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        /* Response Area */
+        .response-area {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .response-header span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .recording-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .recording-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 2px;
+            width: 65%;
+            animation: recording 2s ease-in-out infinite;
+        }
+
+        @keyframes recording {
+            0% {
+                width: 40%;
+            }
+
+            50% {
+                width: 80%;
+            }
+
+            100% {
+                width: 40%;
+            }
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #4ade80;
+        }
+
+        .recording-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-icon {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Floating Score Badge */
+        .score-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.2) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease 1s both;
+        }
+
+        .score-badge-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-badge svg {
+            width: 20px;
+            height: 20px;
+            color: #4ade80;
+        }
+
+        .score-badge-text h5 {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .score-badge-text p {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        /* Responsive for mockup */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .hero-left {
+                text-align: center;
+            }
+
+            .hero-left .hero-subtitle {
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-left .waitlist-form {
+                justify-content: center;
+            }
+
+            .hero-left .form-note {
+                text-align: center;
+            }
+
+            .product-mockup {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-content">
+            <div class="logo"><img src="preplinx-logo.svg" alt="PrepLinx"></div>
+            <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="waitlist">
+        <div class="container">
+            <div class="hero-grid">
+                <!-- Left Column - Text & Form -->
+                <div class="hero-left">
+                    <div class="hero-badge">
+                        <span>Now accepting early access signups</span>
+                    </div>
+                    <h1>Crush mock interviews <span>before they crush you.</span></h1>
+                    <p class="hero-subtitle">PrepLinx lets you practice real-time voice interviews with an AI that
+                        actually
+                        pushes you, then tells you what to fix in your answers.</p>
+
+                    <form class="waitlist-form" id="waitlistForm"
+                        action="https://script.google.com/macros/s/AKfycbwMQYDsuy-q8WvTdNsTbhgjeH4EBb9GIdK1LddVlJPGxcrYzHiQPbkmdbT01fkNbvlj9g/exec"
+                        method="POST">
+                        <input type="email" name="Email" placeholder="Enter your email" required autocomplete="email">
+                        <button type="submit">Join the waitlist</button>
+                    </form>
+                    <p class="form-note">No spam, no cringe. Just launch updates and early access.</p>
+
+                    <div class="success-message" id="successMessage">
+                        🎉 You're on the list! We'll email you when your batch opens.
+                    </div>
+                </div>
+
+                <!-- Right Column - Product Mockup -->
+                <div class="product-mockup">
+                    <!-- Floating glow effects -->
+                    <div class="mockup-glow mockup-glow-1"></div>
+                    <div class="mockup-glow mockup-glow-2"></div>
+
+                    <!-- Main mockup card -->
+                    <div class="mockup-card">
+                        <div class="mockup-inner">
+                            <!-- Header with window controls -->
+                            <div class="mockup-header">
+                                <div class="mockup-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <div class="live-badge">Live Interview</div>
+                            </div>
+
+                            <!-- AI Interviewer -->
+                            <div class="ai-interviewer">
+                                <div class="ai-avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" x2="12" y1="19" y2="22" />
+                                    </svg>
+                                </div>
+                                <div class="ai-info">
+                                    <h4>AI Interviewer</h4>
+                                    <p>Asking behavioral question...</p>
+                                </div>
+                                <div class="sound-waves">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- Current Question -->
+                            <div class="question-box">
+                                <div class="question-label">Current Question</div>
+                                <div class="question-text">"Tell me about a time when you had to handle a difficult
+                                    situation with a team member. How did you approach it?"</div>
+                            </div>
+
+                            <!-- User Response -->
+                            <div class="response-area">
+                                <div class="response-header">
+                                    <div class="user-avatar">Y</div>
+                                    <span>Your response</span>
+                                </div>
+                                <div class="recording-bar">
+                                    <div class="recording-progress"></div>
+                                </div>
+                                <div class="recording-status">Recording...</div>
+                            </div>
+
+                            <!-- Stats -->
+                            <div class="stats-row">
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">12:45</div>
+                                    <div class="stat-label">Duration</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">💬</div>
+                                    <div class="stat-value">4/8</div>
+                                    <div class="stat-label">Questions</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">📊</div>
+                                    <div class="stat-value">87%</div>
+                                    <div class="stat-label">Confidence</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating score badge -->
+                        <div class="score-badge">
+                            <div class="score-badge-content">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="18" x2="18" y1="20" y2="10" />
+                                    <line x1="12" x2="12" y1="20" y2="4" />
+                                    <line x1="6" x2="6" y1="20" y2="14" />
+                                </svg>
+                                <div class="score-badge-text">
+                                    <h5>Performance</h5>
+                                    <p>Excellent</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase Section -->
+    <section class="product-showcase" id="showcase">
+        <!-- Sticky Header -->
+        <div class="showcase-header">
+            <div class="container">
+                <div class="section-label">See it in action</div>
+                <h2 class="section-title">Experience <span class="gradient-text">PrepLinx</span> in Action</h2>
+                <p class="showcase-subtitle">Scroll down to explore our powerful interview preparation platform</p>
+            </div>
+        </div>
+
+        <!-- Progress Dots -->
+        <div class="showcase-progress" id="showcaseProgress">
+            <div class="progress-dot active" data-index="0"></div>
+            <div class="progress-dot" data-index="1"></div>
+            <div class="progress-dot" data-index="2"></div>
+            <div class="progress-dot" data-index="3"></div>
+            <div class="progress-dot" data-index="4"></div>
+            <div class="progress-dot" data-index="5"></div>
+        </div>
+
+        <!-- Stacking Cards -->
+        <div class="showcase-stack" id="showcaseStack">
+            <div class="showcase-card active" data-index="0">
+                <img src="screenshots/preplinx_dashboard.jpg" alt="Dashboard Overview">
+                <div class="showcase-label">Dashboard Overview</div>
+            </div>
+            <div class="showcase-card" data-index="1">
+                <img src="screenshots/preplinx_mockinterviews1.jpg" alt="Mock Interviews Selection">
+                <div class="showcase-label">Mock Interviews Selection</div>
+            </div>
+            <div class="showcase-card" data-index="2">
+                <img src="screenshots/preplinx_interview1.jpg" alt="Active Interview Session">
+                <div class="showcase-label">Active Interview Session</div>
+            </div>
+            <div class="showcase-card" data-index="3">
+                <img src="screenshots/preplinx_interview3_coding.jpg" alt="Live Coding Assessment">
+                <div class="showcase-label">Live Coding Assessment</div>
+            </div>
+            <div class="showcase-card" data-index="4">
+                <img src="screenshots/preplinx_analytics1.jpg" alt="Performance Analytics">
+                <div class="showcase-label">Performance Analytics</div>
+            </div>
+            <div class="showcase-card" data-index="5">
+                <img src="screenshots/preplinx_analytics2.jpg" alt="Detailed Reports">
+                <div class="showcase-label">Detailed Reports</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain & Solution Section -->
+    <section class="pain-solution">
+        <div class="container">
+            <div class="section-label">The real talk</div>
+            <h2 class="section-title">Why interview prep low-key sucks</h2>
+
+            <div class="pain-solution-grid">
+                <div class="pain-column animate-on-scroll">
+                    <h3 class="column-title">
+                        <div class="column-icon">😩</div>
+                        The struggle is real
+                    </h3>
+                    <ul class="bullet-list">
+                        <li>You blank the second they ask something you didn't prep for.</li>
+                        <li>Friends say "you'll do great" but never sit down and drill you properly.</li>
+                        <li>You get rejections with zero real feedback, so you don't know what went wrong.</li>
+                    </ul>
+                </div>
+
+                <div class="solution-column animate-on-scroll">
+                    <h3 class="column-title">
+                        <div class="column-icon">✨</div>
+                        How PrepLinx backs you up
+                    </h3>
+                    <ul class="bullet-list">
+                        <li>Run as many "fake but serious" interviews as you want, whenever you want.</li>
+                        <li>Get instant, honest feedback so you know exactly what to tweak next time.</li>
+                        <li>Turn rambly answers into sharp stories you're not embarrassed to repeat.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Early Access Benefits -->
+    <section class="early-access">
+        <div class="container">
+            <div class="section-label">Early bird perks</div>
+            <h2 class="section-title">Join early, get extra</h2>
+
+            <div class="perks-grid">
+                <div class="perk-card animate-on-scroll">
+                    <div class="perk-icon">🚀</div>
+                    <h3>First in line</h3>
+                    <p>Get early access when we open batches. Skip the wait, start practicing sooner.</p>
+                </div>
+
+                <div class="perk-card animate-on-scroll">
+                    <div class="perk-icon">💰</div>
+                    <h3>Early-bird pricing</h3>
+                    <p>Lock in special pricing and bonus mock sessions exclusively for waitlist members.</p>
+                </div>
+
+                <div class="perk-card animate-on-scroll">
+                    <div class="perk-icon">🗳️</div>
+                    <h3>Shape the product</h3>
+                    <p>Vote on features and tell us what you actually need. Your feedback = our roadmap.</p>
+                </div>
+            </div>
+
+            <div class="support-line animate-on-scroll">
+                We're building this for students and juniors who are tired of "just wing it, you'll be fine."
+            </div>
+        </div>
+    </section>
+
+    <!-- For Students Section -->
+    <section class="for-students">
+        <div class="container">
+            <div class="students-content">
+                <div class="section-label">Who it's for</div>
+                <h2 class="section-title">Made for students & first-job hunters</h2>
+
+                <p class="animate-on-scroll">
+                    If you're juggling classes, projects, and job apps, you don't have time for bad prep. PrepLinx gives
+                    you quick, realistic practice sessions and feedback you can act on before the next interview. Show
+                    up sounding prepared, not scripted.
+                </p>
+
+                <div class="credibility animate-on-scroll">
+                    <div class="credibility-icon">⚡</div>
+                    <span>Built by <strong>Krutrima Labs</strong>, an AI studio focused on high-stakes moments at
+                        work.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-label">Got questions?</div>
+            <h2 class="section-title">FAQ</h2>
+
+            <div class="faq-grid">
+                <div class="faq-item animate-on-scroll">
+                    <h3 class="faq-question">Is it free?</h3>
+                    <p class="faq-answer">Early access comes with a set of free mock interviews. After that, we'll keep
+                        pricing student-friendly.</p>
+                </div>
+
+                <div class="faq-item animate-on-scroll">
+                    <h3 class="faq-question">Is this a replacement for real interviews?</h3>
+                    <p class="faq-answer">No. It's your practice arena so real interviews feel less scary and more
+                        familiar.</p>
+                </div>
+
+                <div class="faq-item animate-on-scroll">
+                    <h3 class="faq-question">When do I get in?</h3>
+                    <p class="faq-answer">We're inviting people in waves. Join the waitlist and we'll email you as soon
+                        as your batch opens.</p>
+                </div>
+
+                <div class="faq-item animate-on-scroll">
+                    <h3 class="faq-question">Can I bounce anytime?</h3>
+                    <p class="faq-answer">Yep. Every email has a one-click unsubscribe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2 class="animate-on-scroll">Ready to stop winging it?</h2>
+            <p class="animate-on-scroll">Join thousands of students getting interview-ready the smart way.</p>
+
+            <form class="waitlist-form animate-on-scroll" id="waitlistForm2"
+                action="https://script.google.com/macros/s/AKfycbwMQYDsuy-q8WvTdNsTbhgjeH4EBb9GIdK1LddVlJPGxcrYzHiQPbkmdbT01fkNbvlj9g/exec"
+                method="POST">
+                <input type="email" name="Email" placeholder="Enter your email" required autocomplete="email">
+                <button type="submit">Join the waitlist</button>
+            </form>
+            <p class="form-note animate-on-scroll">No spam, no cringe. Just launch updates and early access.</p>
+
+            <div class="success-message" id="successMessage2">
+                🎉 You're on the list! We'll email you when your batch opens.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo"><img src="preplinx-logo.svg" alt="PrepLinx"></div>
+            <p class="footer-text">
+                Built with ❤️ by <a href="#">Krutrima Labs</a><br>
+                © 2025 PrepLinx. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Form handling with Google Apps Script (using iframe for reliable CORS bypass)
+        function handleFormSubmit(formId, successId) {
+            const form = document.getElementById(formId);
+            const success = document.getElementById(successId);
+
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    const button = form.querySelector('button');
+                    const emailInput = form.querySelector('input[name="Email"]');
+                    const email = emailInput.value;
+
+                    // Show loading state
+                    button.textContent = 'Sending...';
+                    button.disabled = true;
+
+                    // Create hidden iframe for form submission
+                    const iframe = document.createElement('iframe');
+                    iframe.name = 'hidden_iframe_' + formId;
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+
+                    // Create a temporary form to submit
+                    const tempForm = document.createElement('form');
+                    tempForm.method = 'POST';
+                    tempForm.action = form.action;
+                    tempForm.target = iframe.name;
+
+                    // Add email field
+                    const emailField = document.createElement('input');
+                    emailField.type = 'hidden';
+                    emailField.name = 'Email';
+                    emailField.value = email;
+                    tempForm.appendChild(emailField);
+
+                    document.body.appendChild(tempForm);
+
+                    // Handle iframe load (submission complete)
+                    iframe.onload = function () {
+                        // Show success message
+                        form.style.display = 'none';
+                        form.nextElementSibling.style.display = 'none';
+                        success.style.display = 'block';
+
+                        // Cleanup
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                            document.body.removeChild(tempForm);
+                        }, 100);
+                    };
+
+                    // Submit the form
+                    tempForm.submit();
+                });
+            }
+        }
+
+        handleFormSubmit('waitlistForm', 'successMessage');
+        handleFormSubmit('waitlistForm2', 'successMessage2');
+
+        // Note: localStorage is used only to prevent duplicate submissions in the same session
+        // The form will always show fresh on page reload
+
+        // Smooth scroll for nav CTA
+        document.querySelector('.nav-cta').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('#waitlist').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Product Showcase Scroll Animation
+        (function () {
+            const showcase = document.getElementById('showcase');
+            const showcaseStack = document.getElementById('showcaseStack');
+            const showcaseProgress = document.getElementById('showcaseProgress');
+            const cards = document.querySelectorAll('.showcase-card');
+            const dots = document.querySelectorAll('.progress-dot');
+            const totalCards = cards.length;
+            let currentIndex = 0;
+
+            function updateShowcase() {
+                if (!showcase) return;
+
+                const rect = showcase.getBoundingClientRect();
+                const showcaseTop = -rect.top;
+                const showcaseHeight = showcase.offsetHeight - window.innerHeight;
+                const scrollProgress = Math.max(0, Math.min(1, showcaseTop / showcaseHeight));
+
+                // Calculate which card should be active
+                const newIndex = Math.min(totalCards - 1, Math.floor(scrollProgress * totalCards));
+
+                // Check if we're in the showcase section
+                const isInShowcase = rect.top <= 0 && rect.bottom >= window.innerHeight;
+
+                // Show/hide progress dots
+                if (showcaseProgress) {
+                    if (isInShowcase) {
+                        showcaseProgress.classList.add('visible');
+                    } else {
+                        showcaseProgress.classList.remove('visible');
+                    }
+                }
+
+                // Update cards with smooth animation
+                if (newIndex !== currentIndex || currentIndex === 0) {
+                    currentIndex = newIndex;
+
+                    cards.forEach((card, index) => {
+                        if (index <= currentIndex) {
+                            card.classList.add('active');
+                            card.style.zIndex = index + 1;
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0) scale(1)';
+                            card.style.filter = 'blur(0)';
+                        } else {
+                            card.classList.remove('active');
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(100px) scale(0.9)';
+                            card.style.filter = 'blur(10px)';
+                        }
+                    });
+
+                    // Update progress dots
+                    dots.forEach((dot, index) => {
+                        if (index <= currentIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                }
+            }
+
+            // Add transition styles dynamically
+            cards.forEach(card => {
+                card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+
+            // Throttled scroll handler
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        updateShowcase();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Initial update
+            updateShowcase();
+
+            // Click on dots to scroll to that card
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const showcaseRect = showcase.getBoundingClientRect();
+                    const showcaseHeight = showcase.offsetHeight - window.innerHeight;
+                    const targetScroll = (index / totalCards) * showcaseHeight;
+                    const scrollTo = showcase.offsetTop + targetScroll;
+                    window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>
