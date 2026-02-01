@@ -1,0 +1,11 @@
+# robots.txt for preplinx.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.preplinx.com/sitemap.xml
+
+# Disallow sensitive directories
+Disallow: /.git/
+Disallow: /screenshots/

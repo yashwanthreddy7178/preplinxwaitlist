@@ -2,6 +2,14 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MGDN4YDQ0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-6MGDN4YDQ0');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrepLinx – Crush Mock Interviews Before They Crush You</title>
@@ -1006,6 +1014,8 @@
         .product-mockup {
             position: relative;
             animation: fadeInUp 0.8s ease 0.4s both;
+            transform: scale(1.15);
+            transform-origin: center center;
         }
 
         .mockup-glow {
@@ -1050,6 +1060,14 @@
             padding: 8px;
             backdrop-filter: blur(20px);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .mockup-image {
+            width: 100%;
+            height: auto;
+            border-radius: 18px;
+            display: block;
         }
 
         .mockup-inner {
@@ -1524,98 +1542,10 @@
                     <div class="mockup-glow mockup-glow-1"></div>
                     <div class="mockup-glow mockup-glow-2"></div>
 
-                    <!-- Main mockup card -->
+                    <!-- Main mockup card with image -->
                     <div class="mockup-card">
-                        <div class="mockup-inner">
-                            <!-- Header with window controls -->
-                            <div class="mockup-header">
-                                <div class="mockup-dots">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                <div class="live-badge">Live Interview</div>
-                            </div>
-
-                            <!-- AI Interviewer -->
-                            <div class="ai-interviewer">
-                                <div class="ai-avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                                        <line x1="12" x2="12" y1="19" y2="22" />
-                                    </svg>
-                                </div>
-                                <div class="ai-info">
-                                    <h4>AI Interviewer</h4>
-                                    <p>Asking behavioral question...</p>
-                                </div>
-                                <div class="sound-waves">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
-
-                            <!-- Current Question -->
-                            <div class="question-box">
-                                <div class="question-label">Current Question</div>
-                                <div class="question-text">"Tell me about a time when you had to handle a difficult
-                                    situation with a team member. How did you approach it?"</div>
-                            </div>
-
-                            <!-- User Response -->
-                            <div class="response-area">
-                                <div class="response-header">
-                                    <div class="user-avatar">Y</div>
-                                    <span>Your response</span>
-                                </div>
-                                <div class="recording-bar">
-                                    <div class="recording-progress"></div>
-                                </div>
-                                <div class="recording-status">Recording...</div>
-                            </div>
-
-                            <!-- Stats -->
-                            <div class="stats-row">
-                                <div class="stat-item">
-                                    <div class="stat-icon">⏱️</div>
-                                    <div class="stat-value">12:45</div>
-                                    <div class="stat-label">Duration</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-icon">💬</div>
-                                    <div class="stat-value">4/8</div>
-                                    <div class="stat-label">Questions</div>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-icon">📊</div>
-                                    <div class="stat-value">87%</div>
-                                    <div class="stat-label">Confidence</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Floating score badge -->
-                        <div class="score-badge">
-                            <div class="score-badge-content">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <line x1="18" x2="18" y1="20" y2="10" />
-                                    <line x1="12" x2="12" y1="20" y2="4" />
-                                    <line x1="6" x2="6" y1="20" y2="14" />
-                                </svg>
-                                <div class="score-badge-text">
-                                    <h5>Performance</h5>
-                                    <p>Excellent</p>
-                                </div>
-                            </div>
-                        </div>
+                        <img src="screenshots/preplinx_interview2_whiteboard.jpg"
+                            alt="PrepLinx System Design Interview with Whiteboard" class="mockup-image">
                     </div>
                 </div>
             </div>
